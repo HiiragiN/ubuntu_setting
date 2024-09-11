@@ -24,6 +24,8 @@
 
     - name: Allow everything and enable UFW
       command: ufw enable
+      responses:
+      "Command may disrupt existing ssh connections. Proceed with operation (y|n)?": y
 
     - name: Set logging
       command: ufw logging medium
