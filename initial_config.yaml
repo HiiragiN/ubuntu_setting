@@ -23,13 +23,10 @@
         name: ufw
 
     - name: Allow everything and enable UFW
-      ufw:
-        state: enabled
-        policy: allow
+      command: ufw enable
 
     - name: Set logging
-      ufw:
-        logging: "on"
+      command: ufw logging medium
 
     - name: "setting auto-reboot"
       lineinfile:
