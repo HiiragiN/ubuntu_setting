@@ -1,0 +1,93 @@
+---
+- name: Install Apache from source on RHEL9
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: "setting ssh access log"
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+        regexp: "SyslogFacility AUTH"
+        line: SyslogFacility AUTH
+        backrefs: false
+
+    - name: "setting ssh access log"
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+        regexp: "LogLevel INFO"
+        line: LogLevel INFO
+        backrefs: false
+
+    - name: Install ufw
+      apt:
+        name: ufw
+
+    - name: Allow everything and enable UFW
+      ufw:
+        state: enabled
+        policy: allow
+
+    - name: Set logging
+      ufw:
+        logging: "on"
+
+    - name: "setting auto-reboot"
+      lineinfile:
+        path: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '^(# )Unattended-Upgrade::Automatic-Reboot "false";'
+        line: Unattended-Upgrade::Automatic-Reboot "true";
+        backrefs: false
+
+    - name: "setting auto-reboot"
+      lineinfile:
+        path: /etc/apt/apt.conf.d/50unattended-upgrades
+        regexp: '^(# )Unattended-Upgrade::Automatic-Reboot-Time "02:00";'
+        line: Unattended-Upgrade::Automatic-Reboot "02:00";
+        backrefs: false
+
+    - name: reboot service
+      command: systemctl restart unattended-upgrades.service
+
+    - name: install Rsyslog
+      command: apt install rsyslog
+
+    - name: install Logrotate
+      command: apt install Logrotate
+
+    - name: "setting Logrotate"
+      lineinfile:
+        path: /etc/logrotate.conf
+        regexp: "^rotate 4"
+        line: rotate 48
+        backrefs: false
+
+    - name: "setting Logrotate"
+      lineinfile:
+        path: /etc/logrotate.conf
+        regexp: "^dateext"
+        line: dateext
+        backrefs: false
+
+    - name: "setting Logrotate"
+      lineinfile:
+        path: /etc/logrotate.conf
+        regexp: "^#compress"
+        line: compress
+        backrefs: false
+
+    - name: reboot service
+      command: systemctl restart logrotate.service
+
+    - name: Install jp lang
+      apt:
+        name: language-pack-ja-base
+
+    - name: Install jp lang
+      apt:
+        name: language-pack-ja
+
+    - name: setting jp lang
+      command: update-locale LANG=ja_JP.UTF-8 LANGUAGE=”ja_JP:ja”
+
+    - name: change TZ to Tokyo
+      command: timedatectl set-timezone Asia/Tokyo
