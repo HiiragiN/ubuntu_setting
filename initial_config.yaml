@@ -52,7 +52,7 @@
       command: apt install rsyslog
 
     - name: install Logrotate
-      command: apt install Logrotate
+      command: apt-get install Logrotate
 
     - name: "setting Logrotate"
       lineinfile:
