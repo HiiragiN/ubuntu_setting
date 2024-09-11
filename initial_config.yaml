@@ -22,6 +22,9 @@
       apt:
         name: ufw
 
+    - name: allow ssh
+      command: ufw allow ssh
+
     - name: Allow everything and enable UFW
       expect:
         command: ufw enable
