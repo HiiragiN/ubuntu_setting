@@ -1,6 +1,6 @@
 ---
 - name: set up Ubuntu
-  hosts: host1
+  hosts: all
   become: yes
 
   tasks:
