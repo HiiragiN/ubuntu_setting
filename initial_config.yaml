@@ -1,5 +1,5 @@
 ---
-- name: Install Apache from source on RHEL9
+- name: set up Ubuntu
   hosts: host1
   become: yes
 
